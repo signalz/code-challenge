@@ -20,6 +20,7 @@ interface FormattedWalletBalance {
 }
 // Extends not necessary
 interface Props extends BoxProps {}
+// discouraged pattern React.FC
 const WalletPage: React.FC<Props> = (props: Props) => {
   const { children, ...rest } = props;
   const balances = useWalletBalances();
@@ -78,8 +79,10 @@ const WalletPage: React.FC<Props> = (props: Props) => {
     };
   });
   // sortedBalances is WalletBalance, not FormattedWalletBalance, maybe use formattedBalances
+  // memoize rows
   const rows = sortedBalances.map(
     (balance: FormattedWalletBalance, index: number) => {
+      // error handling for price calculation
       const usdValue = prices[balance.currency] * balance.amount;
       return (
         <WalletRow
